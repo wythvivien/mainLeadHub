@@ -1,0 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-inter;
+
+   /* Hide the default scrollbar */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Style for the custom scrollbar track */
+  ::-webkit-scrollbar-track {
+    background-color: transparent; /* Change as needed */
+  }
+
+  /* Style for the custom scrollbar thumb */
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3); /* Change as needed */
+    border-radius: 10px; /* Change as needed */
+  }
+}
