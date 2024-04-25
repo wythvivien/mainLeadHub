@@ -29,12 +29,35 @@ const createLead = asyncHandler(async (req, res) => {
 // @access  Private
 
 const retrieveLeads = asyncHandler(async (req, res) => {
-  // Get the userId from the authenticated user
-  const { _id: userId } = req.user;
+  try {
+    // Get the userId from the authenticated user
+    const { _id: userId } = req.user;
+    const { pg, filter, sortBy, searchBy, sort_order, filterBy } = req.params
+    
+    const sortOrder = sort_order || 'desc'
+    const sort_by = sortBy || 'createdAt'
+    const filter_By = filterBy || undefined
+    const page = Number(pg) || 1
+    const limit = 10
+    const filterQuery = { user: userId, deleted: false }
 
-  // Retrieve lead collection from the database
-  const leads = await Lead.find({ user: userId, deleted: false });
-  res.status(200).json(leads);
+    if(filter_By === 'status'){
+      filterQuery.status = filter
+    }
+
+    // Retrieve lead collection from the database
+    const query = { user: userId, deleted: false }
+    const result = await Lead.find(filterQuery)
+      .sort({ [sort_by]: sortOrder === "desc" ? -1 : 1 })
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .exec();
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+
 });
 
 // @desc    Get One Lead Document

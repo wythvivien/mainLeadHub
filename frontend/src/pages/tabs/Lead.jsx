@@ -23,7 +23,7 @@ const Lead = () => {
 
   useEffect(() => {
     refetch();
-  }, [])
+  }, [activeTab])
 
   const pluralize = (count) => (count === 1 ? " Lead" : " Leads");
 

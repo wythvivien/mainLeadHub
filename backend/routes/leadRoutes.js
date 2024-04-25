@@ -6,8 +6,11 @@ const router = express.Router();
 
 //Routes related to leads
 router
+  .route("/:pg/:filter/:sortBy/:searchBy/:sort_order/:filterBy")
+  .get(isAuthenticated, retrieveLeads);  // Retrieve all leads
+
+router
   .route("/")
-  .get(isAuthenticated, retrieveLeads)  // Retrieve all leads
   .post(isAuthenticated, createLead) // Create a new Lead
   .put(isAuthenticated, updateLead); // Delete a specific lead
   

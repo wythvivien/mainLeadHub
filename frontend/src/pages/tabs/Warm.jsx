@@ -4,6 +4,8 @@ import { BiFilterAlt, BiSort } from "react-icons/bi";
 import { PiCardsBold, PiTableBold } from "react-icons/pi";
 import { RiContactsBook2Fill } from "react-icons/ri";
 import { sortOptions } from "../../data/menuList";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import {
   useUpdateLeadColumnMutation,
 } from "../../app/api/leadsApiSlice";
@@ -16,7 +18,33 @@ import { openMsgSnackbar } from "../../app/features/snackbar";
 import { toggleLeadForm } from "../../app/features/toggle";
 import { useEffect, useState } from "react";
 
-const Warm = ({ setLeadVal, leads, refetch }) => {
+const fetchLeads = async (pg, filter, sortBy, searchBy, sort_order, filterBy) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8000/api/leads/${pg || 1}/${filter || "Cold"}/${
+        sortBy || "createdAt"
+      }/${searchBy || "G"}/${sort_order || "desc"}/${filterBy || "Default"}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch leads");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching leads:", error);
+  }
+
+}
+
+const Warm = ({ setLeadVal, leads: leads2, refetch }) => {
   const { data: columnOptions, refetch: listRefetch } = useListColumnQuery();
   const [updateColumn] = useUpdateColumnMutation();
   const [updateLeadColumn] = useUpdateLeadColumnMutation();
@@ -24,6 +52,8 @@ const Warm = ({ setLeadVal, leads, refetch }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("Default");
   const [selectedSort, setSelectedSort] = useState("Recency");
+  const [leads, setLeads] = useState(leads2);
+  const [page, setPage] = useState(1);
 
   const dispatch = useDispatch();
 
@@ -67,6 +97,28 @@ const Warm = ({ setLeadVal, leads, refetch }) => {
       console.error("Error exporting leads:", error);
     }
   };
+
+    useEffect(() => {
+      const sortBY = (() => {
+        if (selectedSort === "Recency") {
+          return "createdAt";
+        } else if (selectedSort === "Logically") {
+          return "account";
+        } else {
+          return "createdAt";
+        }
+      })()
+      
+      fetchLeads(page, "Warm", sortBY, searchQuery, "desc", "status")
+        .then((data) => {
+          if (data) {
+            setLeads(data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching leads:", error);
+        });
+  }, [page, selectedFilter, selectedSort, searchQuery]);
 
   const filteredLeads = warmleads
     .filter((lead) =>
@@ -226,6 +278,26 @@ const Warm = ({ setLeadVal, leads, refetch }) => {
             ))}
           </div>
         )}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "10px",
+        }}
+      >
+        <Stack spacing={6}>
+          <Pagination
+          onChange={(e, p) => setPage(p)}
+            count={10}
+            variant="outlined"
+            color="primary"
+            size="large"
+            shape="rounded"
+            sx={{ "& .MuiPaginationItem-root": { fontSize: "1.2rem" } }}
+          />
+        </Stack>
       </div>
     </div>
   );

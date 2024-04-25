@@ -5,10 +5,14 @@ const LEADS_URL = "/api/leads";
 export const leadsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllLeads: builder.query({
-      query: () => ({
-        url: `${LEADS_URL}`,
+      query: (pg, filter, sortBy, searchBy, sort_order, filterBy) => {
+        return {
+        url: `${LEADS_URL}/${pg || 1}/${filter || "Cold"}/${
+          sortBy || "createdAt"
+        }/${searchBy || "G"}/${sort_order || "desc"}/${filterBy || "Default"}`,
         method: "GET",
-      }),
+      }
+      },
     }),
 
     createLead: builder.mutation({

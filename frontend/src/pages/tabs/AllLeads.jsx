@@ -2,6 +2,8 @@ import DropDown from "../../components/dropdown/Dropdown";
 import { TbDatabaseExport, TbSearch } from "react-icons/tb";
 import { BiFilterAlt, BiSort } from "react-icons/bi";
 import { PiCardsBold, PiTableBold } from "react-icons/pi";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import { RiContactsBook2Fill } from "react-icons/ri";
 import { sortOptions } from "../../data/menuList";
 import AllCard from "../../components/cards/AllCard";
@@ -10,14 +12,42 @@ import { useEffect, useState } from "react";
 import { toggleLeadForm } from "../../app/features/toggle";
 import {useDispatch} from "react-redux"
 
-const AllLeads = ({ setLeadVal, leads, refetch }) => {
+const fetchLeads = async (pg, filter, sortBy, searchBy, sort_order, filterBy) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8000/api/leads/${pg || 1}/${filter || "Cold"}/${
+        sortBy || "createdAt"
+      }/${searchBy || "G"}/${sort_order || "desc"}/${filterBy || "Default"}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch leads");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching leads:", error);
+  }
+
+}
+
+const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
   const [cardview, setCardView] = useState(false);
+  const [leads, setLeads] = useState(leads2);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("Default");
   const [selectedSort, setSelectedSort] = useState("Recency");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const statusOptions = ["Warm", "Cold", "Dead", "Default"];
   const dispatch = useDispatch();
-
 
   const exportLeads = async () => {
     try {
@@ -57,6 +87,32 @@ const AllLeads = ({ setLeadVal, leads, refetch }) => {
       console.error("Error exporting leads:", error);
     }
   };
+
+  useEffect(() => {
+    const sortBY = (() => {
+      if (selectedSort === "Recency") {
+        return "createdAt";
+      } else if (selectedSort === "Logically") {
+        return "account";
+      } else {
+        return "createdAt";
+      }
+    })()
+    fetchLeads(
+      page,
+      selectedFilter,
+      sortBY,
+      searchQuery,
+      "desc",
+      "all",
+    ).then((data) => {
+      if (data) {
+        setLeads(data);
+      }
+    }).catch((error) => {
+      console.error("Error fetching leads:", error);
+    });
+  }, [page, selectedFilter, selectedSort, searchQuery]);
 
   const filteredLeads = leads
     .filter((lead) =>
@@ -141,12 +197,18 @@ const AllLeads = ({ setLeadVal, leads, refetch }) => {
             )}
           </div>
           <div className="flex gap-3 xl:gap-5 ">
-            <div className="flex gap-2 bg-white drop-shadow-md rounded-md  px-2 sm:px-3 lg:px-4 py-2 text-sm font-medium items-center justify-center cursor-pointer" onClick={exportLeads}>
+            <div
+              className="flex gap-2 bg-white drop-shadow-md rounded-md  px-2 sm:px-3 lg:px-4 py-2 text-sm font-medium items-center justify-center cursor-pointer"
+              onClick={exportLeads}
+            >
               <TbDatabaseExport className="size-[18px] sm:size-5" />
               <p className="hidden 2xl:block text-sm font-medium">Export</p>
             </div>
 
-            <div className="flex gap-2 bg-green-900 drop-shadow-md rounded-md px-2 sm:px-3 lg:px-4 py-2 items-center cursor-pointer" onClick={() => dispatch(toggleLeadForm(true))}>
+            <div
+              className="flex gap-2 bg-green-900 drop-shadow-md rounded-md px-2 sm:px-3 lg:px-4 py-2 items-center cursor-pointer"
+              onClick={() => dispatch(toggleLeadForm(true))}
+            >
               <RiContactsBook2Fill
                 color="white"
                 className="size-[18px] sm:size-5"
@@ -175,6 +237,26 @@ const AllLeads = ({ setLeadVal, leads, refetch }) => {
             ))}
           </div>
         )}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "10px",
+        }}
+      >
+        <Stack spacing={6}>
+          <Pagination
+          onChange={(e, p) => setPage(p)}
+            count={10}
+            variant="outlined"
+            color="primary"
+            size="large"
+            shape="rounded"
+            sx={{ "& .MuiPaginationItem-root": { fontSize: "1.2rem" } }}
+          />
+        </Stack>
       </div>
     </div>
   );
