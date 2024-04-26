@@ -52,6 +52,7 @@ const Warm = ({ setLeadVal, leads: leads2, refetch }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("Default");
   const [selectedSort, setSelectedSort] = useState("Recency");
+  const [totalPages, setTotalPages] = useState(10);
   const [leads, setLeads] = useState(leads2);
   const [page, setPage] = useState(1);
 
@@ -290,7 +291,7 @@ const Warm = ({ setLeadVal, leads: leads2, refetch }) => {
         <Stack spacing={6}>
           <Pagination
           onChange={(e, p) => setPage(p)}
-            count={10}
+            count={totalPages}
             variant="outlined"
             color="primary"
             size="large"

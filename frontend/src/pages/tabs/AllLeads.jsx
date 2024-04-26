@@ -45,7 +45,7 @@ const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
   const [selectedFilter, setSelectedFilter] = useState("Default");
   const [selectedSort, setSelectedSort] = useState("Recency");
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [totalPages, setTotalPages] = useState(10);
   const statusOptions = ["Warm", "Cold", "Dead", "Default"];
   const dispatch = useDispatch();
 
@@ -249,7 +249,7 @@ const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
         <Stack spacing={6}>
           <Pagination
           onChange={(e, p) => setPage(p)}
-            count={10}
+            count={totalPages}
             variant="outlined"
             color="primary"
             size="large"
