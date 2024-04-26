@@ -296,7 +296,10 @@ const Warm = ({ setLeadVal, leads: leads2, refetch }) => {
             color="primary"
             size="large"
             shape="rounded"
-            sx={{ "& .MuiPaginationItem-root": { fontSize: "1.2rem" } }}
+            sx={{
+              "& .MuiPaginationItem-root": { fontSize: "1.2rem" },
+              "& .Mui-selected": { backgroundColor: "rgb(247, 209, 71)" },
+            }}
           />
         </Stack>
       </div>
