@@ -18,7 +18,7 @@ const Dead = ({ setLeadVal, leads: leads2, refetch }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSort, setSelectedSort] = useState("Recency");
   const [leads, setLeads] = useState(leads2);
-  const [totalPages, setTotalPages] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   const deadleads = leads.filter((lead) => lead.status === "Dead");
@@ -63,13 +63,15 @@ const Dead = ({ setLeadVal, leads: leads2, refetch }) => {
   };
 
   useEffect(() => {
-    fetchLeadCount().then((data) => {
-      if (data) {
-        setTotalPages(data);
-      }
-    }).catch((error) => {
-      console.error("Error fetching leads:", error);
-    });
+    fetchLeadCount("Dead")
+      .then((data) => {
+        if (data) {
+          setTotalPages(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching leads:", error);
+      });
     const sortBY = (() => {
       if (selectedSort === "Recency") {
         return "createdAt";

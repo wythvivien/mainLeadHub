@@ -20,7 +20,7 @@ const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
   const [selectedFilter, setSelectedFilter] = useState("Default");
   const [selectedSort, setSelectedSort] = useState("Recency");
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
   const statusOptions = ["Warm", "Cold", "Dead", "Default"];
   const dispatch = useDispatch();
 
@@ -64,7 +64,7 @@ const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
   };
 
   useEffect(() => {
-    fetchLeadCount().then((data) => {
+    fetchLeadCount(selectedFilter).then((data) => {
       if (data) {
         setTotalPages(data);
       }

@@ -6,7 +6,7 @@ const router = express.Router();
 
 //Routes related to leads
 router
-  .route("/count")
+  .route("/count/:filter")
   .get(isAuthenticated, retrieveLeadCount);  // Retrieve all leads
 router
   .route("/:pg/:filter/:sortBy/:searchBy/:sort_order/:filterBy")

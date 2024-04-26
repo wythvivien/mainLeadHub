@@ -1,7 +1,7 @@
-const fetchLeadCount = async () => {
+const fetchLeadCount = async (filter) => {
   try {
     const response = await fetch(
-      `http://localhost:8000/api/leads/count`,
+      `http://localhost:8000/api/leads/count/${filter}`,
       {
         method: "GET",
         credentials: "include",

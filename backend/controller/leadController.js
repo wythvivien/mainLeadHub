@@ -65,12 +65,16 @@ const retrieveLeadCount = asyncHandler(async (req, res) => {
     // Get the userId from the authenticated user
     const { _id: userId } = req.user;
 
+    const { filter } = req.params
+
     const limit = process.env.PAGE_LIMIT || 10
-    const filterQuery = { user: userId, deleted: false }
+    const filterQuery = { user: userId, deleted: false, status: filter }
+
+    if(filter === 'Default') delete filterQuery.status
 
     const result = await Lead.find(filterQuery)
-console.log(result)
-    res.status(200).json(Math.ceil(result.length / limit));
+    const recordCount = result.length || 1
+    res.status(200).json(Math.ceil(recordCount / limit));
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }

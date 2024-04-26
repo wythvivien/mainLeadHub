@@ -28,7 +28,7 @@ const Warm = ({ setLeadVal, leads: leads2, refetch }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("Default");
   const [selectedSort, setSelectedSort] = useState("Recency");
-  const [totalPages, setTotalPages] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
   const [leads, setLeads] = useState(leads2);
   const [page, setPage] = useState(1);
 
@@ -76,13 +76,6 @@ const Warm = ({ setLeadVal, leads: leads2, refetch }) => {
   };
 
     useEffect(() => {
-    fetchLeadCount().then((data) => {
-      if (data) {
-        setTotalPages(data);
-      }
-    }).catch((error) => {
-      console.error("Error fetching leads:", error);
-    });
       const sortBY = (() => {
         if (selectedSort === "Recency") {
           return "createdAt";
@@ -92,6 +85,14 @@ const Warm = ({ setLeadVal, leads: leads2, refetch }) => {
           return "createdAt";
         }
       })()
+
+    fetchLeadCount("Warm").then((data) => {
+      if (data) {
+        setTotalPages(data);
+      }
+    }).catch((error) => {
+      console.error("Error fetching leads:", error);
+    });
       
       fetchLeads(page, "Warm", sortBY, searchQuery, "desc", "status")
         .then((data) => {

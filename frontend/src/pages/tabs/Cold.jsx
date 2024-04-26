@@ -18,7 +18,7 @@ const Cold = ({ setLeadVal, leads: leads2, refetch }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSort, setSelectedSort] = useState("Recency");
   const [leads, setLeads] = useState(leads2);
-  const [totalPages, setTotalPages] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   
@@ -64,7 +64,7 @@ const Cold = ({ setLeadVal, leads: leads2, refetch }) => {
   };
 
   useEffect(() => {
-    fetchLeadCount().then((data) => {
+    fetchLeadCount('Cold').then((data) => {
       if (data) {
         setTotalPages(data);
       }
