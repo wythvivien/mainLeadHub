@@ -1,10 +1,13 @@
 import express from "express";
 import isAuthenticated from "../middleware/auth.js";
-import { retrieveLeads, getLead, updateLead, updateLeadDetails, createLead, deleteLead, updateLeadColumn, getLeadId, listLeads} from "../controller/leadController.js";
+import { retrieveLeads, retrieveLeadCount, getLead, updateLead, updateLeadDetails, createLead, deleteLead, updateLeadColumn, getLeadId, listLeads} from "../controller/leadController.js";
 
 const router = express.Router();
 
 //Routes related to leads
+router
+  .route("/count")
+  .get(isAuthenticated, retrieveLeadCount);  // Retrieve all leads
 router
   .route("/:pg/:filter/:sortBy/:searchBy/:sort_order/:filterBy")
   .get(isAuthenticated, retrieveLeads);  // Retrieve all leads

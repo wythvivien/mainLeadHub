@@ -11,32 +11,7 @@ import AllTable from "../../components/table/AllTable";
 import { useEffect, useState } from "react";
 import { toggleLeadForm } from "../../app/features/toggle";
 import {useDispatch} from "react-redux"
-
-const fetchLeads = async (pg, filter, sortBy, searchBy, sort_order, filterBy) => {
-  try {
-    const response = await fetch(
-      `http://localhost:8000/api/leads/${pg || 1}/${filter || "Cold"}/${
-        sortBy || "createdAt"
-      }/${searchBy || "G"}/${sort_order || "desc"}/${filterBy || "Default"}`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch leads");
-    }
-
-    return response.json();
-  } catch (error) {
-    console.error("Error fetching leads:", error);
-  }
-
-}
+import {fetchLeadCount, fetchLeads} from "./helpers";
 
 const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
   const [cardview, setCardView] = useState(false);
@@ -89,6 +64,13 @@ const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
   };
 
   useEffect(() => {
+    fetchLeadCount().then((data) => {
+      if (data) {
+        setTotalPages(data);
+      }
+    }).catch((error) => {
+      console.error("Error fetching leads:", error);
+    });
     const sortBY = (() => {
       if (selectedSort === "Recency") {
         return "createdAt";

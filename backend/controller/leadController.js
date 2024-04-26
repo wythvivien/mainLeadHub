@@ -60,6 +60,23 @@ const retrieveLeads = asyncHandler(async (req, res) => {
 
 });
 
+const retrieveLeadCount = asyncHandler(async (req, res) => {
+  try {
+    // Get the userId from the authenticated user
+    const { _id: userId } = req.user;
+
+    const limit = process.env.PAGE_LIMIT || 10
+    const filterQuery = { user: userId, deleted: false }
+
+    const result = await Lead.find(filterQuery)
+console.log(result)
+    res.status(200).json(Math.ceil(result.length / limit));
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+
+});
+
 // @desc    Get One Lead Document
 // route    GET /api/leads/:id
 // @access  Private
@@ -255,6 +272,7 @@ const listLeads = asyncHandler(async (req, res) => {
 });
 
 export {
+  retrieveLeadCount,
   retrieveLeads,
   getLead,
   updateLeadDetails,
