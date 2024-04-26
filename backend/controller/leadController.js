@@ -74,7 +74,12 @@ const retrieveLeadCount = asyncHandler(async (req, res) => {
 
     const result = await Lead.find(filterQuery)
     const recordCount = result.length || 1
-    res.status(200).json(Math.ceil(recordCount / limit));
+    res
+      .status(200)
+      .json({
+        pageCount: Math.ceil(recordCount / limit),
+        totalCount: result.length,
+      });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }

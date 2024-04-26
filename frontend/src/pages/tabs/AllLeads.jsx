@@ -21,6 +21,7 @@ const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
   const [selectedSort, setSelectedSort] = useState("Recency");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const statusOptions = ["Warm", "Cold", "Dead", "Default"];
   const dispatch = useDispatch();
 
@@ -66,7 +67,8 @@ const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
   useEffect(() => {
     fetchLeadCount(selectedFilter).then((data) => {
       if (data) {
-        setTotalPages(data);
+        setTotalPages(data.pageCount);
+        setTotalCount(data.totalCount);
       }
     }).catch((error) => {
       console.error("Error fetching leads:", error);
@@ -127,9 +129,9 @@ const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
       <div className="flex flex-col-reverse md:flex-row gap-3 h-fit justify-between mb-5">
         <div className="flex gap-8 items-center">
           <h1 className="hidden lg:flex items-center text-2xl font-semibold text-green-900">
-            <span className="font-bold text-4xl">{filteredLeads.length}</span>
+            <span className="font-bold text-4xl">{totalCount}</span>
             &nbsp;Lead
-            {filteredLeads.length === 1 ? "" : "s"}
+            {totalCount === 1 ? "" : "s"}
           </h1>
           {
             <div className="flex w-full md:w-fit justify-between gap-2 xl:gap-5">
@@ -238,7 +240,9 @@ const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
             shape="rounded"
             sx={{
               "& .MuiPaginationItem-root": { fontSize: "1.2rem" },
-              "& .Mui-selected": { backgroundColor: "rgb(247, 209, 71) !important" },
+              "& .Mui-selected": {
+                backgroundColor: "rgb(247, 209, 71) !important",
+              },
             }}
           />
         </Stack>

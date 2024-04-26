@@ -19,6 +19,7 @@ const Dead = ({ setLeadVal, leads: leads2, refetch }) => {
   const [selectedSort, setSelectedSort] = useState("Recency");
   const [leads, setLeads] = useState(leads2);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   const deadleads = leads.filter((lead) => lead.status === "Dead");
@@ -66,7 +67,8 @@ const Dead = ({ setLeadVal, leads: leads2, refetch }) => {
     fetchLeadCount("Dead")
       .then((data) => {
         if (data) {
-          setTotalPages(data);
+          setTotalPages(data.pageCount);
+          setTotalCount(data.totalCount);
         }
       })
       .catch((error) => {
@@ -125,9 +127,9 @@ const Dead = ({ setLeadVal, leads: leads2, refetch }) => {
       <div className="flex h-fit justify-between mb-5">
         <div className="flex gap-8 items-center">
           <h1 className="hidden lg:flex items-center text-2xl font-semibold text-green-900">
-            <span className="font-bold text-4xl">{filteredLeads.length}</span>
+            <span className="font-bold text-4xl">{totalCount}</span>
             &nbsp;Lead
-            {filteredLeads.length === 1 ? "" : "s"}
+            {totalCount === 1 ? "" : "s"}
           </h1>
           <div className="flex gap-3 xl:gap-5">
             <div className="flex gap-2 bg-white drop-shadow-md rounded-md px-2 lg:px-3 py-2 text-sm items-center justify-center">
