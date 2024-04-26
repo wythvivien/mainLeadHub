@@ -179,11 +179,14 @@ const Dead = ({ setLeadVal, leads: leads2, refetch }) => {
               />
             )}
           </div>
-     
-            <div className="flex gap-2 bg-white drop-shadow-md rounded-md  px-2 sm:px-3 lg:px-4 py-2 text-sm font-medium items-center justify-center cursor-pointer" onClick={exportLeads}>
-              <TbDatabaseExport className="size-[18px] sm:size-5" />
-              <p className="hidden 2xl:block text-sm font-medium">Export</p>
-            </div>
+
+          <div
+            className="flex gap-2 bg-white drop-shadow-md rounded-md  px-2 sm:px-3 lg:px-4 py-2 text-sm font-medium items-center justify-center cursor-pointer"
+            onClick={exportLeads}
+          >
+            <TbDatabaseExport className="size-[18px] sm:size-5" />
+            <p className="hidden 2xl:block text-sm font-medium">Export</p>
+          </div>
 
           <div
             className="flex gap-2 bg-green-900 drop-shadow-md rounded-md px-2 sm:px-3 lg:px-4 py-2 items-center cursor-pointer"
@@ -227,7 +230,7 @@ const Dead = ({ setLeadVal, leads: leads2, refetch }) => {
       >
         <Stack spacing={6}>
           <Pagination
-          onChange={(e, p) => setPage(p)}
+            onChange={(e, p) => setPage(p)}
             count={totalPages}
             variant="outlined"
             color="primary"

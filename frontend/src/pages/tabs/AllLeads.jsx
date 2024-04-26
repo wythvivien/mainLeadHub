@@ -248,7 +248,7 @@ const AllLeads = ({ setLeadVal, leads : leads2, refetch }) => {
       >
         <Stack spacing={6}>
           <Pagination
-          onChange={(e, p) => setPage(p)}
+            onChange={(e, p) => setPage(p)}
             count={totalPages}
             variant="outlined"
             color="primary"
