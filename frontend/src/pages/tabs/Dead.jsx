@@ -221,7 +221,9 @@ const Dead = ({ setLeadVal, leads: leads2, refetch }) => {
             shape="rounded"
             sx={{
               "& .MuiPaginationItem-root": { fontSize: "1.2rem" },
-              "& .Mui-selected": { backgroundColor: "rgb(247, 209, 71)" },
+              "& .Mui-selected": {
+                backgroundColor: "rgb(247, 209, 71) !important",
+              },
             }}
           />
         </Stack>

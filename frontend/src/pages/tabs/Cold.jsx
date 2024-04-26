@@ -168,10 +168,13 @@ const Cold = ({ setLeadVal, leads: leads2, refetch }) => {
               <TbDatabaseImport className="size-[18px] sm:size-5" />
               <p className="hidden 2xl:block text-sm font-medium">Import</p>
             </div> */}
-            <div className="flex gap-2 bg-white drop-shadow-md rounded-md px-2 sm:px-3 lg:px-4 py-2 text-sm font-medium items-center justify-center cursor-pointer" onClick={exportLeads}>
-              <TbDatabaseExport className="size-[18px] sm:size-5" />
-              <p className="hidden 2xl:block text-sm font-medium">Export</p>
-            </div>
+          <div
+            className="flex gap-2 bg-white drop-shadow-md rounded-md px-2 sm:px-3 lg:px-4 py-2 text-sm font-medium items-center justify-center cursor-pointer"
+            onClick={exportLeads}
+          >
+            <TbDatabaseExport className="size-[18px] sm:size-5" />
+            <p className="hidden 2xl:block text-sm font-medium">Export</p>
+          </div>
           {/* </div> */}
           <div
             className="flex gap-2 bg-green-900 drop-shadow-md rounded-md px-2 sm:px-3 lg:px-4 py-2 items-center cursor-pointer"
@@ -215,7 +218,7 @@ const Cold = ({ setLeadVal, leads: leads2, refetch }) => {
       >
         <Stack spacing={6}>
           <Pagination
-          onChange={(e, p) => setPage(p)}
+            onChange={(e, p) => setPage(p)}
             count={totalPages}
             variant="outlined"
             color="primary"
@@ -223,7 +226,7 @@ const Cold = ({ setLeadVal, leads: leads2, refetch }) => {
             shape="rounded"
             sx={{
               "& .MuiPaginationItem-root": { fontSize: "1.2rem" },
-              "& .Mui-selected": { backgroundColor: "rgb(247, 209, 71)" },
+              "& .Mui-selected": { backgroundColor: "rgb(247, 209, 71) !important" },
             }}
           />
         </Stack>
