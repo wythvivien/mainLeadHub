@@ -38,7 +38,7 @@ const retrieveLeads = asyncHandler(async (req, res) => {
     const sort_by = sortBy || 'createdAt'
     const filter_By = filterBy || undefined
     const page = Number(pg) || 1
-    const limit = 10
+    const limit = process.env.PAGE_LIMIT || 10
     const filterQuery = { user: userId, deleted: false }
 
     if(filter_By === 'status'){
