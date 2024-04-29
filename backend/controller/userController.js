@@ -63,6 +63,16 @@ const getDateTasks = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Tasks not found" });
   }
 
+  tasks.sort((a, b) => {
+      // Convert time strings to Date objects for comparison
+      let timeA = new Date("1970-01-01T" + a.time + "Z");
+      let timeB = new Date("1970-01-01T" + b.time + "Z");
+      
+      // Compare the dates
+      return timeA - timeB;
+  });
+
+
   return res.status(201).json(tasks); // Return the created task
 });
 
