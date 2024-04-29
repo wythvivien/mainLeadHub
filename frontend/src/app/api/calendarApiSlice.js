@@ -26,7 +26,33 @@ export const calendarApiSlice = apiSlice.injectEndpoints({
         params: { lead },
       }),
     }),
+
+    updateTaskDetails: builder.mutation({
+      query: ({taskId, completed}) => ({
+        url: `${USERS_URL}/tasks/update`,
+        method: "PUT",
+        body: {taskId, completed}
+      }),
+    }),
+
+    deleteTaskDetails: builder.mutation({
+      query: ({taskId}) => ({
+        url: `${USERS_URL}/tasks/delete`,
+        method: "DELETE",
+        body: {taskId}
+      }),
+    }),
+    
+    
+    updateTasks: builder.mutation({
+      query: ({ data }) => ({
+        url: `${USERS_URL}/tasks/update-by-id`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
+
   }),
 });
 
-export const { useGetUserTasksQuery, useGetDateTasksQuery, useGetLeadDetailsQuery } = calendarApiSlice;
+export const { useGetUserTasksQuery, useGetDateTasksQuery, useGetLeadDetailsQuery, useUpdateTaskDetailsMutation, useDeleteTaskDetailsMutation, useUpdateTasksMutation} = calendarApiSlice;

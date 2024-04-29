@@ -1,18 +1,22 @@
 import SubmitButton from "../../components/button/SubmitButton";
 import { toast } from "react-toastify";
 import { MdClose } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useListLeadsQuery } from "../../app/api/leadsApiSlice";
 import { toggleTaskForm } from "../../app/features/toggle";
 import { useDispatch, useSelector } from "react-redux";
 import { BiChevronDown } from "react-icons/bi";
 import { useAddTasksMutation } from "../../app/api/leadDetailsApiSlice";
+import { useUpdateTasksMutation } from "../../app/api/calendarApiSlice";
 
 const AddTask = () => {
   const [person, setPerson] = useState(null);
   const [addTasks] = useAddTasksMutation();
+  const [updateTasks] = useUpdateTasksMutation();
   const [type, setType] = useState(null);
   const [openPerson, setOpenPerson] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+
   const [openType, setOpenType] = useState(false);
   const [task, setTask] = useState({
     title: "",
@@ -24,25 +28,52 @@ const AddTask = () => {
   });
 
   const { data: leads } = useListLeadsQuery();
+
   const taskForm = useSelector((state) => state.toggle.taskForm);
+  const taskObj = useSelector((state) => state.toggle.task);
+
+  useEffect(() => {
+      if(taskObj) {
+        setEditMode(true);
+
+        setTask({
+          title: taskObj.title,
+          description: taskObj.description,
+          dueDate: taskObj.dueDate,
+          type: taskObj.type,
+          date: taskObj.date,
+          time: taskObj.time,
+        });
+      }
+  }, [taskObj]);
+  
   const dispatch = useDispatch();
 
   const options = ["Meetings", "Appointment", "Deadline"]
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    debugger;
     try {
-      await addTasks({ leadAccount: person, data: task });
-      toast("Updated Successfully");
-      setTask({
-        title: "",
-        description: "",
-        dueDate: "",
-        type: "",
-        date: "",
-        time: "",
-      });
-      refetch();
+      if(!editMode) {
+        await addTasks({ leadAccount: person, data: task });
+        toast("Task Updated Successfully");
+        setTask({
+          title: "",
+          description: "",
+          dueDate: "",
+          type: "",
+          date: "",
+          time: "",
+        });
+        refetch();
+      } else {
+        task.taskId = taskObj._id;
+        await updateTasks({ data: task });
+        toast("Task Updated Successfully");
+        refetch();
+      }
+    
     } catch (err) {
       toast(err?.data?.message || err.error);
     }
@@ -185,7 +216,8 @@ const AddTask = () => {
           </div>
         </div>
         <div className="flex px-6 justify-end mt-8">
-          <SubmitButton text="Add Task" />
+          {!editMode && (<SubmitButton text="Add Task" />)}
+          {editMode && (<SubmitButton text="Update Task" />)}
         </div>
       </form>
     </aside>

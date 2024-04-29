@@ -7,6 +7,7 @@ const initialState = {
   taskForm: false,
   dealForm: false,
   editDetails: false,
+  task: '',
 };
 
 const toggleSlice = createSlice({
@@ -26,7 +27,8 @@ const toggleSlice = createSlice({
     },
 
     toggleTaskForm: (state, action) => {
-      state.taskForm = action.payload;
+      state.taskForm = action.payload.payload ? action.payload.payload : action.payload;
+      state.task = action.payload.task ? action.payload.task : '';
     },
 
     toggleDealForm: (state, action) => {

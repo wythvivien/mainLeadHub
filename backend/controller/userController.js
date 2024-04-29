@@ -66,6 +66,72 @@ const getDateTasks = asyncHandler(async (req, res) => {
   return res.status(201).json(tasks); // Return the created task
 });
 
+
+// @desc Get User Tasks
+// route GET /tasks/date
+// @access Private
+
+const updateTasks = asyncHandler(async (req, res) => {
+  // Get the userId from the authenticated user
+  const { _id: userId } = req.user;
+ 
+  const { completed, taskId } = req.body;
+  const tasks = await Task.find({ user: userId, _id: taskId });
+
+  if (!tasks) {
+    return res.status(404).json({ message: "Tasks not found" });
+  }
+
+  const lead = await Task.findOneAndUpdate(
+    { _id: taskId },
+    { $set: { completed: completed } },
+    { new: true }
+  );
+  return res.status(201).json(tasks); // Return the created task
+});
+
+const updateTaskById = asyncHandler(async (req, res) => {
+  // Get the userId from the authenticated user
+  const { _id: userId } = req.user;
+ 
+  const { taskId } = req.body;
+  const tasks = await Task.find({ user: userId, _id: taskId });
+
+  if (!tasks) {
+    return res.status(404).json({ message: "Tasks not found" });
+  }
+
+  const task = await Task.findOneAndUpdate(
+    { _id: taskId },
+    { $set: { title: req.body.title,
+      description: req.body.description,
+      dueDate: req.body.dueDate,
+      type: req.body.type,
+      date: req.body.date,
+      time: req.body.time
+    } },
+    { new: true }
+  );
+  return res.status(201).json(task); // Return the created task
+});
+
+const deleteTask = asyncHandler(async (req, res) => {
+  // Get the userId from the authenticated user
+  const { _id: userId } = req.user;
+ 
+  const { taskId } = req.body;
+
+  const tasks = await Task.find({ user: userId, _id: taskId });
+
+  if (!tasks) {
+    return res.status(404).json({ message: "Tasks not found" });
+  }
+  var myquery = { _id: taskId };
+
+  const lead = await Task.deleteOne(myquery);
+  return res.status(201).json(tasks); // Return the created task
+});
+
 // @desc Get Lead Details
 // route GET /tasks/lead
 // @access Private
@@ -313,5 +379,8 @@ export {
   exportColdLeads,
   exportDeadLeads,
   exportColumn,
-  exportDeals
+  exportDeals,
+  updateTasks,
+  deleteTask,
+  updateTaskById
 };

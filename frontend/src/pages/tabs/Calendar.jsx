@@ -39,7 +39,7 @@ const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [date, setDate] = useState(format(new Date(), "yyyy-MM-dd"));
 
-  const { data: datedTasks} = useGetDateTasksQuery(date);
+  const { data: datedTasks, refetch} = useGetDateTasksQuery(date);
 
   const getDateTask = (day) => {
     setDate(format(day, "yyyy-MM-dd"));
@@ -148,14 +148,13 @@ const Calendar = () => {
               {weekDays[getDay(new Date(date))]}
             </h1>
             <p className="text-sm font-semibold text-gray-500">
-              {format(date, "MMMM dd yyyy")}
+              {format(date, "MMMM dd yyyy")} 
             </p>
           </div>
-
           {datedTasks && datedTasks?.length > 0 ? (
             <div className="flex flex-col gap-3 items-center justify-start flex-grow overflow-y-auto my-3 pr-3 mb-12">
               {datedTasks?.map((task, index) => (
-                <TaskCard task={task} key={index} />
+                <TaskCard task={task} key={index} refetch={() => refetch()} />
               ))}
             </div>
           ) : (

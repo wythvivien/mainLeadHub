@@ -1,6 +1,6 @@
 import express from "express";
 import isAuthenticated from "../middleware/auth.js";
-import { logUser, logOut, getUserTasks, getDateTasks, getLeadDetails, exportAllLeads, exportWarmLeads, exportColdLeads, exportDeadLeads,exportColumn, exportDeals} from "../controller/userController.js";
+import { logUser, logOut, getUserTasks, getDateTasks, getLeadDetails, exportAllLeads, exportWarmLeads, exportColdLeads, exportDeadLeads,exportColumn, exportDeals, updateTasks, deleteTask, updateTaskById} from "../controller/userController.js";
 import passport from "passport";
 
 const router = express.Router();
@@ -45,6 +45,11 @@ router.get("/tasks/date", isAuthenticated, getDateTasks)
 
 // Route for getting leads based on the task of the user
 router.get("/tasks/lead", isAuthenticated, getLeadDetails)
+
+// Route for getting leads based on the task of the user
+router.put("/tasks/update", isAuthenticated, updateTasks)
+router.delete("/tasks/delete", isAuthenticated, deleteTask)
+router.put("/tasks/update-by-id", isAuthenticated, updateTaskById)
 
 router.get("/export/leads", isAuthenticated, exportAllLeads)
 
