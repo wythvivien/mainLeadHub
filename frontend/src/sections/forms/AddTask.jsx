@@ -33,6 +33,15 @@ const AddTask = () => {
   const taskObj = useSelector((state) => state.toggle.task);
 
   useEffect(() => {
+    setEditMode(false);
+    setTask({
+      title: "",
+      description: "",
+      dueDate: "",
+      type: "",
+      date: "",
+      time: "",
+    });
       if(taskObj) {
         setEditMode(true);
 

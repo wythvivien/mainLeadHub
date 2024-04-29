@@ -28,7 +28,7 @@ const toggleSlice = createSlice({
 
     toggleTaskForm: (state, action) => {
       state.taskForm = action.payload.payload ? action.payload.payload : action.payload;
-      state.task = action.payload.task ? action.payload.task : '';
+      state.task = action.payload.task ? action.payload.task : null;
     },
 
     toggleDealForm: (state, action) => {
